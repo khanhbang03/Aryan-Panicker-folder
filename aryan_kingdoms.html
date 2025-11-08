@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>9 Aryan Panicker Kingdoms — Blessing Battle</title>
+<style>
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --muted:rgba(255,255,255,0.75);
+  }
+  html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#061021 0%, #071428 50%, #0b1a2a 100%);color:var(--muted)}
+  .wrap{max-width:1100px;margin:18px auto;padding:18px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  h1{font-size:18px;margin:0;color:#fff}
+  .controls{display:flex;gap:8px;align-items:center}
+  button{background:#0ea5a7;border:0;padding:8px 12px;border-radius:8px;color:#012;cursor:pointer;font-weight:600}
+  button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--muted)}
+  label{font-size:13px;color:rgba(255,255,255,0.8)}
+  .panel{display:flex;gap:12px;align-items:center}
+  canvas{width:100%;height:640px;border-radius:12px;display:block;background:
+    radial-gradient(ellipse at center, rgba(255,255,255,0.02), transparent 20%),
+    linear-gradient(180deg, rgba(255,255,255,0.01), transparent 40%);box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+  footer{margin-top:12px;color:rgba(255,255,255,0.55);font-size:13px}
+  .legend{display:flex;gap:8px;flex-wrap:wrap}
+  .nodeBadge{display:inline-flex;gap:8px;align-items:center;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:13px}
+  .dot{width:12px;height:12px;border-radius:50%}
+  @media(max-width:640px){canvas{height:520px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>9 Aryan Panicker Kingdoms — Bless each other through "Blessing Battles"</h1>
+    <div class="controls">
+      <div class="panel">
+        <button id="togglePlay">Pause</button>
+        <button class="secondary" id="randomize">Randomize Colors</button>
+      </div>
+      <div style="width:8px"></div>
+      <label>Speed <input id="speed" type="range" min="0.2" max="3" step="0.1" value="1" /></label>
+    </div>
+  </header>
+
+  <canvas id="c"></canvas>
+
+  <footer>
+    <div class="legend" id="legend"></div>
+    <p>Each kingdom sends animated waves of luck, wealth, health, support, and happiness to the others — the more they "battle", the brighter the world becomes.</p>
+  </footer>
+</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d', {alpha:true});
+  let DPR = window.devicePixelRatio || 1;
+  function resize(){
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.round(rect.width * DPR);
+    canvas.height = Math.round(rect.height * DPR);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const labels = [
+    "Wisdom","Strength","Prosperity","Peace","Joy","Health","Love","Creativity","Light"
+  ];
+  const descriptions = {
+    "Wisdom":"Infinite clarity and learning",
+    "Strength":"Endless vitality and confidence",
+    "Prosperity":"Boundless wealth and abundance",
+    "Peace":"Balance and inner stillness",
+    "Joy":"Endless happiness and music",
+    "Health":"Eternal good health and rejuvenation",
+    "Love":"Warm relationships and belonging",
+    "Creativity":"Inspiration and imagination",
+    "Light":"Hope, support and unity"
+  };
+
+  // default palette
+  let palette = [
+    "#7c3aed","#ef4444","#f59e0b","#06b6d4","#f97316","#10b981","#ec4899","#a78bfa","#60a5fa"
+  ];
+
+  const nodes = [];
+  const center = {x:0,y:0};
+  const radius = 220;
+  const nodeRadius = 28;
+  let running = true;
+  let speed = 1;
+
+  function initNodes(){
+    nodes.length = 0;
+    const w = canvas.width / DPR;
+    const h = canvas.height / DPR;
+    center.x = w/2; center.y = h/2;
+    // place nodes evenly around a circle
+    for(let i=0;i<9;i++){
+      const angle = i * (Math.PI*2/9) - Math.PI/2;
+      const x = center.x + Math.cos(angle) * radius;
+      const y = center.y + Math.sin(angle) * radius;
+      nodes.push({
+        id: i,
+        label: labels[i],
+        desc: descriptions[labels[i]],
+        x, y,
+        ang: angle,
+        color: palette[i % palette.length],
+        cooldown: Math.random()*1.6,
+        pulseTimer: 0
+      });
+    }
+  }
+
+  // generate blessing packet (animated arc + particles)
+  function createPulse(fromNode, toNode){
+    const packets = [];
+    const steps = 36;
+    const dx = toNode.x - fromNode.x;
+    const dy = toNode.y - fromNode.y;
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    const nx = dx/dist, ny = dy/dist;
+    const midx = (fromNode.x + toNode.x)/2;
+    const midy = (fromNode.y + toNode.y)/2;
+    const perp = {x:-ny, y:nx};
+    const curve = (Math.random()*0.6 + 0.6) * (dist * 0.18);
+    const color = fromNode.color;
+    const lifetime = 120 / speed;
+    const createdAt = performance.now();
+    return {from:fromNode, to:toNode, color, curve, lifetime, createdAt, id:Date.now()+Math.random()};
+  }
+
+  const activePulses = [];
+  function stepPulses(now){
+    // remove expired
+    for(let i=activePulses.length-1;i>=0;i--){
+      const p = activePulses[i];
+      const age = (now - p.createdAt) / (1000);
+      if(age > p.lifetime/60) activePulses.splice(i,1);
+    }
+    // draw pulses
+    activePulses.forEach(p => {
+      const age = (now - p.createdAt) / 1000;
+      const t = Math.min(age / (p.lifetime/60), 1);
+      // draw main glowing curve
+      ctx.save();
+      ctx.lineWidth = 6 * (1 - 0.4*t) * (0.8 + 0.4*Math.sin(t*Math.PI*2));
+      const grad = ctx.createLinearGradient(p.from.x, p.from.y, p.to.x, p.to.y);
+      grad.addColorStop(0, p.color);
+      grad.addColorStop(1, 'rgba(255,255,255,0.9)');
+      ctx.strokeStyle = grad;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 18 * (1 - 0.2*t);
+      // bezier curve control
+      const mx = (p.from.x + p.to.x)/2 + p.curve * Math.cos((p.from.ang + p.to.ang)/2 + Math.PI/2);
+      const my = (p.from.y + p.to.y)/2 + p.curve * Math.sin((p.from.ang + p.to.ang)/2 + Math.PI/2);
+      ctx.beginPath();
+      ctx.moveTo(p.from.x, p.from.y);
+      ctx.quadraticCurveTo(mx, my, p.to.x, p.to.y);
+      ctx.stroke();
+      // sparkles along path
+      const sparks = Math.floor(6 + 12 * (1 - t));
+      for(let s=0;s<sparks;s++){
+        const tt = (s/ (sparks-1 || 1)) * (0.85) + 0.05 * Math.sin(now/500 + s);
+        // point on quadratic
+        const qx = (1-tt)*(1-tt)*p.from.x + 2*(1-tt)*tt*mx + tt*tt*p.to.x;
+        const qy = (1-tt)*(1-tt)*p.from.y + 2*(1-tt)*tt*my + tt*tt*p.to.y;
+        ctx.beginPath();
+        const r = 2 + 2*Math.sin((now/300)+s);
+        ctx.arc(qx + Math.sin(now/400 + s)*2, qy + Math.cos(now/350 + s)*2, Math.max(0.8, r*(1-t)), 0, Math.PI*2);
+        ctx.fillStyle = (s%2===0) ? 'rgba(255,255,255,0.95)' : p.color;
+        ctx.fill();
+      }
+      // pulse halo near target
+      if(t>0.6){
+        ctx.globalAlpha = (t-0.6)/0.4 * 0.6;
+        ctx.beginPath();
+        ctx.arc(p.to.x, p.to.y, nodeRadius + 16 * (t-0.6)/0.4, 0, Math.PI*2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+      ctx.restore();
+    });
+  }
+
+  function drawNodes(now){
+    nodes.forEach(n=>{
+      // node outer halo slight glow
+      ctx.save();
+      ctx.shadowBlur = 18;
+      ctx.shadowColor = n.color;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, nodeRadius+6, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(255,255,255,0.02)";
+      ctx.fill();
+      ctx.restore();
+
+      // main circle
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, nodeRadius, 0, Math.PI*2);
+      // gradient
+      const g = ctx.createLinearGradient(n.x-nRadius(), n.y-nRadius(), n.x+nRadius(), n.y+nRadius());
+      g.addColorStop(0, shade(n.color, -16));
+      g.addColorStop(1, shade(n.color, 12));
+      ctx.fillStyle = g;
+      ctx.fill();
+
+      // label
+      ctx.font = "600 13px Inter, system-ui, -apple-system, 'Segoe UI', Roboto";
+      ctx.fillStyle = "white";
+      ctx.textAlign = "center";
+      ctx.fillText(n.label, n.x, n.y + nodeRadius + 16);
+    });
+  }
+
+  function nRadius(){ return nodeRadius; }
+
+  // small helper to lighten/darken hex color
+  function shade(hex, percent) {
+    const f=parseInt(hex.slice(1),16),t=percent<0?0:255,p=Math.abs(percent)/100;
+    const R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+    const newR=Math.round((t-R)*p)+R;
+    const newG=Math.round((t-G)*p)+G;
+    const newB=Math.round((t-B)*p)+B;
+    return `rgb(${newR}, ${newG}, ${newB})`;
+  }
+
+  // render background soft connections (very faint)
+  function drawConnections(){
+    ctx.save();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(255,255,255,0.03)";
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a = nodes[i], b = nodes[j];
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        const mx = (a.x+b.x)/2, my=(a.y+b.y)/2;
+        ctx.quadraticCurveTo(mx, my, b.x, b.y);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
+
+  function tick(now){
+    if(!last) last = now;
+    const dt = (now - last) / 1000;
+    last = now;
+
+    // clear
+    ctx.clearRect(0,0,canvas.width/DPR, canvas.height/DPR);
+
+    // subtle starfield
+    drawStarfield(now);
+
+    drawConnections();
+
+    // node auto-pulse logic
+    nodes.forEach(n=>{
+      n.cooldown -= dt * speed;
+      if(n.cooldown <= 0){
+        // pick a random other node
+        let idx = Math.floor(Math.random()*(nodes.length-1));
+        if(idx >= n.id) idx++; // ensure not same
+        const target = nodes[idx];
+        activePulses.push(createPulse(n, target));
+        n.cooldown = 0.8 + Math.random()*2.2; // reset cooldown
+      }
+    });
+
+    stepPulses(now);
+
+    drawNodes(now);
+
+    if(running) requestAnimationFrame(tick);
+  }
+
+  // starfield background - very subtle moving dots
+  const stars = [];
+  for(let i=0;i<80;i++){
+    stars.push({
+      x: Math.random()*canvas.width/DPR,
+      y: Math.random()*canvas.height/DPR,
+      r: Math.random()*1.2 + 0.2,
+      v: 0.02 + Math.random()*0.08
+    });
+  }
+  function drawStarfield(now){
+    ctx.save();
+    ctx.globalAlpha = 0.9;
+    stars.forEach(s=>{
+      s.x += Math.cos(now/50000 + s.y)*0.02 * speed;
+      s.y += s.v * speed;
+      if(s.y > canvas.height/DPR + 10) { s.y = -10; s.x = Math.random()*canvas.width/DPR; }
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(255,255,255,0.045)";
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  // UI wiring
+  document.getElementById('togglePlay').addEventListener('click', ()=>{
+    running = !running;
+    document.getElementById('togglePlay').textContent = running ? "Pause" : "Play";
+    if(running) requestAnimationFrame(tick);
+  });
+
+  document.getElementById('randomize').addEventListener('click', ()=>{
+    palette = palette.map(()=> '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6,'0'));
+    nodes.forEach((n,i)=> n.color = palette[i % palette.length]);
+    renderLegend();
+  });
+
+  document.getElementById('speed').addEventListener('input', (e)=>{
+    speed = parseFloat(e.target.value);
+  });
+
+  // legend
+  function renderLegend(){
+    const container = document.getElementById('legend');
+    container.innerHTML = '';
+    nodes.forEach(n=>{
+      const el = document.createElement('div');
+      el.className = 'nodeBadge';
+      const d = document.createElement('span');
+      d.className = 'dot';
+      d.style.background = n.color;
+      el.appendChild(d);
+      const t = document.createElement('div');
+      t.innerHTML = `<strong style="color:white">${n.label}</strong><div style="font-size:12px;color:rgba(255,255,255,0.6)">${n.desc}</div>`;
+      el.appendChild(t);
+      container.appendChild(el);
+    });
+  }
+
+  // initial setup
+  initNodes();
+  renderLegend();
+
+  // start animation
+  let last = null;
+  requestAnimationFrame(tick);
+
+})();
+</script>
+</body>
+</html>
