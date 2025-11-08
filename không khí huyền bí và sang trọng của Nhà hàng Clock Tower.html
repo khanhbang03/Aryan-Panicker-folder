@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock Tower Wish: Anh Tu & Javokher's Infinite Luck</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: #1c1c1c; /* Màu nền đen xám, tối và sang trọng */
+            color: #e0e0e0; /* Màu chữ sáng */
+            text-align: center;
+            padding: 50px;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://i.imgur.com/your-clock-tower-background.jpg'); /* Giả lập hình ảnh tháp đồng hồ */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: rgba(25, 25, 25, 0.95); /* Nền trong suốt hơn để thấy background */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(135, 206, 250, 0.5); /* Ánh sáng xanh nhạt của đồng hồ */
+            border: 1px solid #333;
+        }
+
+        h1 {
+            color: #87ceeb; /* Xanh dương nhạt, tượng trưng cho kim loại và đồng hồ */
+            font-size: 2.8em;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(135, 206, 250, 0.8);
+        }
+
+        h2 {
+            color: #ffcc00; /* Vàng đồng hồ */
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        button {
+            background-color: #ffcc00;
+            color: #1c1c1c;
+            border: none;
+            padding: 12px 25px;
+            margin-top: 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.5);
+        }
+
+        button:hover {
+            background-color: #e6b800;
+            transform: translateY(-2px);
+        }
+
+        #luck-display {
+            margin-top: 30px;
+            font-size: 1.4em;
+            height: 150px;
+            overflow-y: scroll; /* Cho phép cuộn để thấy sự "vô hạn" */
+            color: #98fb98; /* Xanh lá may mắn */
+            text-align: left;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Clock Tower Restaurant: Infinite Luck Loop</h1>
+        
+        <p>Giữa tiếng chuông vang vọng từ Tháp Đồng Hồ, **Anh Tú và Javokher Khusanov** cùng nâng ly. Lời chúc của họ không chỉ dành cho một đêm, mà là một lời ước không bao giờ kết thúc:</p>
+        
+        <h2>"Chúng tôi ước mình là những người đàn ông may mắn nhất đêm nay, giống như một **vòng lặp for vô hạn**."</h2>
+        
+        <button onclick="startInfiniteLuck()">Khởi động Vòng Lặp May Mắn</button>
+        
+        <div id="luck-display">
+            </div>
+        
+        <p style="margin-top: 30px; font-size: 0.9em; color: #999;">(Mỗi tiếng tích tắc là một lời chúc may mắn được lặp lại không ngừng nghỉ.)</p>
+    </div>
+
+    <script>
+        function startInfiniteLuck() {
+            const display = document.getElementById('luck-display');
+            // Xóa nội dung cũ khi bắt đầu
+            display.innerHTML = ''; 
+
+            const wishTemplate = "⏰ [TIME] - Lần thứ [COUNT]: Anh Tú và Javokher Khusanov là những người may mắn nhất! 🍀<br>";
+            let count = 0;
+            
+            // Dùng setTimeout lặp lại để mô phỏng "vòng lặp" không ngừng
+            function simulateInfiniteLoop() {
+                count++;
+                
+                // Giới hạn số lần lặp để tránh treo trình duyệt. 
+                // Ở đây mô phỏng 2000 lần lặp.
+                if (count > 2000) { 
+                    display.innerHTML += "<p style='color: #ff4500;'>*** ĐÃ ĐẠT GIỚI HẠN MÔ PHỎNG (2000) - SỰ MAY MẮN VẪN TIẾP DIỄN KHÔNG NGỪNG! ***</p>";
+                    return; 
+                }
+
+                // Lấy thời gian hiện tại
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('vi-VN');
+                
+                // Tạo dòng chúc mới
+                const newWish = wishTemplate
+                    .replace("[COUNT]", count)
+                    .replace("[TIME]", timeString);
+                
+                // Thêm lời chúc vào đầu danh sách (unshift effect)
+                display.innerHTML = newWish + display.innerHTML;
+                
+                // Cuộn lên đầu để người dùng dễ theo dõi các lời chúc mới
+                display.scrollTop = 0; 
+
+                // Lặp lại sau 50 mili giây (nhanh hơn, mô phỏng tích tắc)
+                setTimeout(simulateInfiniteLoop, 50); 
+            }
+            
+            display.innerHTML = "🌠 Đồng hồ bắt đầu đếm ngược may mắn...<br>";
+            simulateInfiniteLoop();
+        }
+    </script>
+
+</body>
+</html>

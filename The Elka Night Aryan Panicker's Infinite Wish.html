@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Elka Night: Aryan Panicker's Infinite Wish</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #0d0d0d; /* Màu đen sang trọng */
+            color: #f0e68c; /* Màu vàng nhạt, tượng trưng cho ánh nến/may mắn */
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); /* Ánh sáng vàng lung linh */
+        }
+
+        h1 {
+            color: #ffd700; /* Vàng kim */
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        button {
+            background-color: #ffd700;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ffc400;
+        }
+
+        #luck-display {
+            margin-top: 30px;
+            font-size: 1.5em;
+            height: 100px;
+            overflow: hidden; /* Ẩn các dòng nếu có quá nhiều */
+            color: #ff6347; /* Màu đỏ may mắn */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Bữa tối tại Elka: Lời Chúc Vô Hạn</h1>
+        <p><strong>Aryan Panicker</strong> bước vào nhà hàng **Elka**, không gian lãng mạn như chứa đựng mọi hy vọng của anh. Đêm nay, anh thì thầm lời nguyện cầu của mình:</p>
+        
+        <h2>"Tôi ước mình là người đàn ông may mắn nhất đêm nay, giống như một **vòng lặp for vô hạn**."</h2>
+        
+        <button onclick="startInfiniteLuck()">Kích hoạt Lời Chúc May Mắn</button>
+        
+        <div id="luck-display"></div>
+        
+        <p style="margin-top: 40px; font-size: 0.9em; color: #aaa;">(Trong lập trình, vòng lặp vô hạn là một cấu trúc lặp không bao giờ kết thúc, tượng trưng cho sự may mắn kéo dài mãi mãi)</p>
+    </div>
+
+    <script>
+        function startInfiniteLuck() {
+            const display = document.getElementById('luck-display');
+            const wishText = "✨ Lời Chúc Lặp Lần thứ [COUNT]: Aryan Panicker là người may mắn nhất đêm nay! ✨<br>";
+            let count = 0;
+            
+            // Dùng setTimeout thay vì vòng lặp for vô hạn thực sự
+            // Vòng lặp for vô hạn (for(;;) {...}) sẽ làm treo trình duyệt.
+            // Dùng setTimeout lặp lại để mô phỏng "vòng lặp" không ngừng,
+            // nhưng vẫn giữ cho giao diện người dùng (UI) hoạt động.
+            
+            function simulateInfiniteLoop() {
+                count++;
+                
+                // Giới hạn số lần lặp để tránh tràn bộ nhớ và làm đơ trình duyệt.
+                // Ở đây mô phỏng 1000 lần lặp. Nếu muốn "vô hạn" hơn, tăng số này lên.
+                if (count > 1000) { 
+                    display.innerHTML += "<br>✅ **ĐÃ ĐẠT GIỚI HẠN MÔ PHỎNG (1000) - LỜI CHÚC VẪN TIẾP TỤC TRONG TRÍ TƯỞNG TƯỢNG.**";
+                    return; 
+                }
+
+                // Thêm lời chúc vào đầu danh sách để hiệu ứng cuộn trông thú vị hơn
+                display.innerHTML = wishText.replace("[COUNT]", count) + display.innerHTML;
+                
+                // Giới hạn số dòng hiển thị
+                const lines = display.innerHTML.split('<br>').filter(line => line.trim() !== '');
+                if (lines.length > 5) {
+                    // Chỉ giữ lại 5 dòng gần nhất
+                    display.innerHTML = lines.slice(0, 5).join('<br>'); 
+                }
+
+                // Lặp lại sau 100 mili giây
+                setTimeout(simulateInfiniteLoop, 100); 
+            }
+            
+            display.innerHTML = "🌠 Bắt đầu vòng lặp may mắn...<br>";
+            simulateInfiniteLoop();
+        }
+    </script>
+
+</body>
+</html>

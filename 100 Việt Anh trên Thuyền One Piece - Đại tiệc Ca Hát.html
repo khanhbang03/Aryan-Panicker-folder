@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Việt Anh trên Thuyền One Piece - Đại tiệc Ca Hát</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
+        
+        body {
+            font-family: 'Shrikhand', cursive; /* Font chữ độc đáo, vui nhộn */
+            background-color: #00bfff; /* Xanh dương của biển */
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            background-image: linear-gradient(to bottom, #1e90ff, #00bfff); /* Hiệu ứng biển */
+            min-height: 100vh;
+        }
+
+        .ship-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            background-color: #ff4500; /* Màu đỏ cam của cờ hải tặc */
+            padding: 30px 20px 60px 20px;
+            border-radius: 15px;
+            border: 5px solid #ffd700; /* Vàng kim */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #ffd700;
+            text-shadow: 3px 3px 0px #ff4500, 5px 5px 0px #000;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
+        }
+
+        p {
+            font-family: Arial, sans-serif;
+            font-size: 1.2em;
+            margin-bottom: 25px;
+        }
+
+        #viet-anh-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr); /* 10 cột, tổng cộng 100 ô */
+            gap: 5px;
+            margin-top: 30px;
+            border: 3px solid #000;
+            background-color: #228b22; /* Màu xanh của Merry/Sunny */
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .viet-anh {
+            font-size: 2.5em;
+            cursor: pointer;
+            transition: transform 0.1s;
+            position: relative;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+        }
+
+        .singing {
+            animation: sing-effect 0.3s infinite alternate;
+        }
+
+        @keyframes sing-effect {
+            from { transform: scale(1.0); color: #fff; }
+            to { transform: scale(1.2); color: #ff69b4; } /* Màu hồng vui vẻ */
+        }
+        
+        #message-board {
+            margin-top: 30px;
+            font-size: 1.8em;
+            color: #00ff7f; /* Xanh lá rực rỡ */
+            min-height: 50px;
+            font-family: 'Shrikhand', cursive;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="ship-container">
+        <h1>MANG LẠI ONE PIECE CÙNG 100 VIỆT ANH! 🏴‍☠️</h1>
+        
+        <p>100 phiên bản của Việt Anh đang ca hát, cười vang và sẵn sàng tìm kiếm kho báu vĩ đại nhất!</p>
+        
+        <button onclick="startCelebration()">🎶 Bắt đầu Đại tiệc Ca Hát! 🎤</button>
+        
+        <div id="viet-anh-grid">
+            </div>
+        
+        <div id="message-board">
+            Sẵn sàng ra khơi!
+        </div>
+        
+    </div>
+
+    <script>
+        const symbols = ["😄", "🎤", "😁", "🥳", "⚓", "🎉"]; // Các biểu tượng cảm xúc và hoạt động
+        const totalVietAnhs = 100;
+
+        function initializeVietAnhs() {
+            const grid = document.getElementById('viet-anh-grid');
+            grid.innerHTML = ''; // Xóa bất kỳ nội dung cũ nào
+
+            for (let i = 1; i <= totalVietAnhs; i++) {
+                const va = document.createElement('div');
+                va.className = 'viet-anh';
+                // Mỗi Việt Anh có một biểu tượng ngẫu nhiên
+                va.innerHTML = symbols[Math.floor(Math.random() * symbols.length)]; 
+                va.id = 'va-' + i;
+                va.title = 'Việt Anh số ' + i;
+                va.onclick = () => showSoloMessage(i);
+                grid.appendChild(va);
+            }
+        }
+
+        function startCelebration() {
+            const grid = document.getElementById('viet-anh-grid').children;
+            const messageBoard = document.getElementById('message-board');
+            let singingCount = 0;
+            
+            // Xóa tất cả hiệu ứng cũ
+            for (let i = 0; i < grid.length; i++) {
+                grid[i].classList.remove('singing');
+            }
+
+            // Dùng setInterval để tạo hiệu ứng ca hát và cười ngẫu nhiên
+            const interval = setInterval(() => {
+                const randomIndex = Math.floor(Math.random() * totalVietAnhs);
+                const randomVietAnh = grid[randomIndex];
+                
+                // Thêm/Xóa class 'singing' để tạo hiệu ứng động
+                randomVietAnh.classList.toggle('singing');
+                
+                singingCount++;
+                
+                // Mỗi 20 lần lặp, thay đổi biểu tượng ngẫu nhiên
+                if (singingCount % 20 === 0) {
+                     randomVietAnh.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+                }
+                
+                // Hiển thị thông điệp vui vẻ ngẫu nhiên
+                const messages = [
+                    "YOHOHO! Ca hát không ngừng nghỉ!",
+                    "CƯỜI TUÔN NƯỚC MẮT! 😆",
+                    "Đại tiệc đã bắt đầu!",
+                    "Việt Anh số " + (randomIndex + 1) + " đang hát solo!",
+                    "Sẵn sàng tìm One Piece!",
+                ];
+                messageBoard.innerHTML = messages[Math.floor(Math.random() * messages.length)];
+
+            }, 50); // Lặp lại rất nhanh (50ms) để tạo không khí náo nhiệt
+            
+            // Dừng hiệu ứng sau 5 giây (chỉ mô phỏng)
+            setTimeout(() => {
+                clearInterval(interval);
+                for (let i = 0; i < grid.length; i++) {
+                    grid[i].classList.remove('singing');
+                }
+                messageBoard.innerHTML = "🎉 Cả 100 Việt Anh đã ca hát và cười vui vẻ! Tiếp tục chuyến hải trình!";
+            }, 5000); 
+        }
+        
+        function showSoloMessage(id) {
+            const messageBoard = document.getElementById('message-board');
+            messageBoard.innerHTML = `⭐ VIỆT ANH ${id} VỪA TUNG MỘT CÚ CƯỜI KHÔNG THỂ CẢN! 😄`;
+        }
+
+        // Khởi tạo 100 Việt Anh khi tải trang
+        window.onload = initializeVietAnhs;
+    </script>
+
+</body>
+</html>

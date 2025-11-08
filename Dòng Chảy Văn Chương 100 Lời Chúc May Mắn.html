@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dòng Chảy Văn Chương: 100 Lời Chúc May Mắn</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif; /* Font cổ điển, văn học */
+            background-color: #fcf8e3; /* Màu giấy cũ, ấm áp */
+            color: #3e3e3e; /* Màu mực đậm */
+            text-align: center;
+            padding: 50px;
+            /* Họa tiết sách/mực mờ */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><text x="5" y="50" font-size="40" fill="%23d8c3a5">📚</text></svg>');
+            background-size: 80px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            border: 5px double #a9714b; /* Viền nâu cổ điển */
+        }
+
+        h1 {
+            color: #8b0000; /* Màu đỏ đô, quyền lực và văn chương */
+            font-size: 2.8em;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #a9714b; /* Nâu đất sét */
+            font-size: 1.5em;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        button {
+            background-color: #8b0000;
+            color: #fcf8e3;
+            border: none;
+            padding: 15px 30px;
+            margin-top: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s, transform 0.2s;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background-color: #6a0000;
+            transform: scale(1.03);
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #luck-display {
+            margin-top: 35px;
+            font-size: 1.1em;
+            height: 250px;
+            overflow-y: scroll; 
+            color: #006400; /* Xanh lá, màu mực viết */
+            text-align: left;
+            padding: 15px;
+            background-color: #f4f0e6; /* Nền giấy hơi vàng */
+            border: 1px solid #d8c3a5;
+            border-radius: 3px;
+        }
+
+        .luck-item {
+            padding: 4px 0;
+            border-bottom: 1px dotted #e0d9c4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Dòng Chảy Văn Chương Việt Đương Đại</h1>
+        
+        <p>Giữa những trang viết của cuộc sống, **Phương Nhi, Thái và Vân Bảo** cùng nhau tạo nên một chương mới. Lời chúc may mắn của họ được ghim lại, lặp đi lặp lại một cách hoàn hảo:</p>
+        
+        <h2>"Chúng tôi ước mình là người may mắn nhất đêm nay, giống như một **vòng lặp for 100 lần**."</h2>
+        
+        <button id="startButton" onclick="start100LuckLoop()">Viết 100 Lời Chúc May Mắn</button>
+        
+        <div id="luck-display">
+            </div>
+        
+        <p style="margin-top: 30px; font-size: 0.9em; color: #666;">(Mỗi lần lặp là một câu thơ, một dòng văn xuôi khắc ghi vận may trọn vẹn 100 lần.)</p>
+    </div>
+
+    <script>
+        function start100LuckLoop() {
+            const display = document.getElementById('luck-display');
+            const startButton = document.getElementById('startButton');
+            
+            // Vô hiệu hóa nút và xóa nội dung cũ
+            startButton.disabled = true;
+            display.innerHTML = ''; 
+            
+            const wishTemplate = "<div class='luck-item'>✒️ **Chương [COUNT]/100:** Phương Nhi, Thái và Vân Bảo: May mắn trọn vẹn đêm nay! 🌟</div>";
+            let count = 0;
+            
+            // Dùng setTimeout để mô phỏng vòng lặp từng bước, tránh làm giật trình duyệt
+            function executeLoopStep() {
+                count++;
+                if (count <= 100) {
+                    const newWish = wishTemplate.replace("[COUNT]", count);
+                    display.innerHTML += newWish;
+                    display.scrollTop = display.scrollHeight; // Cuộn xuống dưới cùng
+                    
+                    // Khoảng thời gian mô phỏng viết từng dòng văn chương (100ms)
+                    setTimeout(executeLoopStep, 100); 
+                } else {
+                    display.innerHTML += "<p style='color: #8b0000; font-weight: bold; margin-top: 10px;'>📜 **ĐÃ HOÀN THÀNH BẢN VIẾT 100 CHƯƠNG MAY MẮN!**</p>";
+                    startButton.disabled = false; // Kích hoạt lại nút
+                }
+            }
+            
+            display.innerHTML = "🖋️ Đang bắt đầu viết dòng chảy may mắn (100 lần lặp)...<br>";
+            executeLoopStep();
+        }
+    </script>
+
+</body>
+</html>

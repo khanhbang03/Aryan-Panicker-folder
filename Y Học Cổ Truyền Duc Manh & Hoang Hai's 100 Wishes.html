@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y Học Cổ Truyền: Duc Manh & Hoang Hai's 100 Wishes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8f0; /* Xanh lá nhạt, nhẹ nhàng */
+            color: #333;
+            text-align: center;
+            padding: 40px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><text x="0" y="80" font-size="90" fill="%23c8e6c9" font-family="serif">🌿</text></svg>'); /* Họa tiết lá cây mờ */
+            background-size: 50px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid #6b8e23; /* Viền xanh olive */
+        }
+
+        h1 {
+            color: #2e8b57; /* Xanh lá đậm */
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #a2cd5a;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #8b4513; /* Nâu đất, ấm áp */
+            font-size: 1.4em;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        p {
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        button {
+            background-color: #6b8e23; /* Xanh olive */
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            margin-top: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 3px 10px rgba(107, 142, 35, 0.4);
+        }
+
+        button:hover {
+            background-color: #55771d;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #luck-display {
+            margin-top: 30px;
+            font-size: 1.2em;
+            height: 200px;
+            overflow-y: auto; /* Cho phép cuộn */
+            color: #4682b4; /* Xanh thép, tượng trưng cho sự vững chắc */
+            text-align: left;
+            padding: 15px;
+            background-color: #e6ffe6; /* Nền xanh nhạt hơn */
+            border: 1px solid #9acd32;
+            border-radius: 5px;
+        }
+
+        .luck-item {
+            padding: 5px 0;
+            border-bottom: 1px dotted #c8e6c9;
+        }
+        .luck-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Nhà hàng Y học Cổ truyền: 100 Lời Chúc May Mắn</h1>
+        
+        <p>Trong không gian thanh tịnh của nhà hàng **Y học Cổ truyền**, **Đức Mạnh và Hoàng Hải** cùng nâng chén trà thảo mộc. Lời chúc của họ tràn đầy năng lượng và hy vọng, lặp lại chính xác 100 lần:</p>
+        
+        <h2>"Chúng tôi ước mình là những người đàn ông may mắn nhất đêm nay, giống như một **vòng lặp for 100 lần**."</h2>
+        
+        <button id="startButton" onclick="start100LuckLoop()">Kích hoạt 100 Lời Chúc May Mắn</button>
+        
+        <div id="luck-display">
+            </div>
+        
+        <p style="margin-top: 25px; font-size: 0.9em; color: #666;">(Mỗi lời chúc là một liều thuốc tinh thần, lặp lại 100 lần để tăng cường may mắn.)</p>
+    </div>
+
+    <script>
+        function start100LuckLoop() {
+            const display = document.getElementById('luck-display');
+            const startButton = document.getElementById('startButton');
+            
+            // Vô hiệu hóa nút để tránh kích hoạt lại trong khi đang chạy
+            startButton.disabled = true;
+            display.innerHTML = ''; // Xóa nội dung cũ
+            
+            const wishTemplate = "<div class='luck-item'>🍃 Lần lặp [COUNT]/100: Đức Mạnh & Hoàng Hải là những người may mắn nhất! 🌟</div>";
+            let count = 0;
+
+            // Sử dụng setTimeout để tạo hiệu ứng từng bước, không làm treo trình duyệt
+            function executeLoopStep() {
+                count++;
+                if (count <= 100) {
+                    const newWish = wishTemplate.replace("[COUNT]", count);
+                    display.innerHTML += newWish;
+                    display.scrollTop = display.scrollHeight; // Cuộn xuống dưới cùng để thấy lời chúc mới
+                    setTimeout(executeLoopStep, 70); // Chờ 70ms trước khi lặp lại
+                } else {
+                    display.innerHTML += "<p style='color: #2e8b57; font-weight: bold; margin-top: 10px;'>✅ ĐÃ HOÀN THÀNH 100 LỜI CHÚC MAY MẮN!</p>";
+                    startButton.disabled = false; // Kích hoạt lại nút
+                }
+            }
+            
+            display.innerHTML = "🌿 Đang bắt đầu vòng lặp 100 lời chúc...<br>";
+            executeLoopStep();
+        }
+    </script>
+
+</body>
+</html>

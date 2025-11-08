@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Việt Anh trên Tàu Vô Hạn: Cuộc Chiến Đỉnh Cao</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif; /* Font vui nhộn */
+            background-color: #008080; /* Màu xanh ngọc, tượng trưng cho biển */
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="0" y="80" font-size="90" fill="%23ffd700" transform="rotate(20)">🏴‍☠️</text></svg>'); /* Họa tiết cờ cướp biển */
+            background-size: 150px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(50, 50, 50, 0.85); /* Nền xám trong suốt, mô phỏng boong tàu */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 69, 0, 0.6); /* Hiệu ứng cháy bỏng */
+            border: 5px solid #ff4500;
+        }
+
+        h1 {
+            color: #ffd700; /* Vàng kim */
+            font-size: 2.5em;
+            text-shadow: 2px 2px 5px #000;
+        }
+
+        h2 {
+            color: #ff6347; /* Đỏ san hô */
+            font-size: 1.8em;
+            margin: 20px 0;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+
+        button {
+            background-color: #ff4500; /* Màu lửa */
+            color: #fff;
+            border: none;
+            padding: 15px 35px;
+            margin-top: 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 50px; /* Nút tròn, độc đáo */
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff6347;
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        button:disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
+        }
+
+        #battle-log {
+            margin-top: 30px;
+            font-size: 1.1em;
+            height: 300px;
+            overflow-y: scroll; 
+            color: #98fb98; /* Xanh lá, kết quả */
+            text-align: left;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px dashed #ffd700;
+            border-radius: 8px;
+        }
+
+        .log-item {
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>☠️ 100 Việt Anh trên Con Tàu Vô Hạn One Piece ⚓</h1>
+        
+        <p>100 bản sao của **Việt Anh** đang chiến đấu, **cười vỡ bụng** và cạnh tranh khốc liệt trên con thuyền **dài vô hạn**! Dưới đây là biên niên sử trận đấu hỗn loạn của họ và **Nhật Minh**:</p>
+        
+        <h2>🔥 Vòng Lặp Bất Tận Của Sự Hỗn Loạn (Đau Đớn & Thẻ Bài) 🔥</h2>
+        
+        <button id="startButton" onclick="startInfiniteBattle()">Bắt đầu Cuộc Chiến & Chơi Bài Cười Phô Lồ</button>
+        
+        <div id="battle-log">
+            </div>
+        
+        <p style="margin-top: 30px; font-size: 0.9em; color: #ccc;">(Đây là một vòng lặp mô phỏng, nó sẽ chạy mãi mãi để tượng trưng cho chiếc tàu dài vô hạn.)</p>
+    </div>
+
+    <script>
+        function startInfiniteBattle() {
+            const log = document.getElementById('battle-log');
+            const startButton = document.getElementById('startButton');
+            
+            // Vô hiệu hóa nút và xóa nội dung cũ
+            startButton.disabled = true;
+            log.innerHTML = ''; 
+            
+            let battleCount = 0;
+            const vietAnhNames = Array.from({length: 100}, (_, i) => `Việt Anh số ${i + 1}`);
+
+            function getRandomElement(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            function simulateInfiniteLoop() {
+                battleCount++;
+                
+                // --- KẾT THÚC VÒNG LẶP NẾU CẦN THIẾT (để tránh quá tải) ---
+                if (battleCount > 500) { 
+                    log.innerHTML += "<p style='color: yellow; font-weight: bold; margin-top: 15px;'>🚢 **TÀU VẪN TIẾP TỤC HÀNH TRÌNH VÔ HẠN - LOG TẠM NGỪNG Ở 500 LẦN!**</p>";
+                    startButton.disabled = false;
+                    return; 
+                }
+                // --------------------------------------------------------
+
+                const va1 = getRandomElement(vietAnhNames);
+                let va2;
+                do {
+                    va2 = getRandomElement(vietAnhNames);
+                } while (va1 === va2); // Đảm bảo hai người khác nhau
+
+                const actions = [
+                    "đau đớn hét lên sau cú đấm của",
+                    "cười phô lô vào mặt",
+                    "đánh trả cực mạnh, gây chấn thương cho",
+                    "cạnh tranh vị trí thuyền trưởng với",
+                    "cười vỡ bụng trước trò đùa của",
+                    "bị thẻ bài Ma Thuật của Nhật Minh đánh bại và đổ lỗi cho",
+                    "nhảy múa trong đau đớn cùng"
+                ];
+                
+                const randomAction = getRandomElement(actions);
+                
+                let logEntry;
+
+                if (battleCount % 5 === 0) {
+                    // Cứ 5 lần lặp, mô phỏng trò chơi thẻ bài với Nhật Minh
+                    const cardResult = Math.random() > 0.5 ? "thắng áp đảo" : "thua ê chề";
+                    logEntry = `🃏 **Lần ${battleCount}:** ${va1} và ${va2} ngừng chiến! Họ cùng **Nhật Minh** ${cardResult} ván thẻ bài. Cả ba **cười phô lô**!`;
+                } else {
+                    // Mô phỏng đánh nhau/cạnh tranh
+                    logEntry = `💥 **Lần ${battleCount}:** ${va1} ${randomAction} ${va2}. Boong tàu đổ máu và... nước mắt (cười)!`;
+                }
+                
+                // Thêm vào log
+                log.innerHTML = `<div class='log-item'>${logEntry}</div>` + log.innerHTML;
+                log.scrollTop = 0; // Cuộn lên đầu
+
+                // Lặp lại sau 150 mili giây
+                setTimeout(simulateInfiniteLoop, 150); 
+            }
+            
+            log.innerHTML = "📜 **Nhật ký Bắt đầu:** 100 Việt Anh sẵn sàng chiến đấu. Thuyền trưởng Nhật Minh rút thẻ bài...<br>";
+            simulateInfiniteLoop();
+        }
+    </script>
+
+</body>
+</html>
